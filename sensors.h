@@ -8,28 +8,35 @@ using Clock = system_clock;
 using msecs = milliseconds;
 using Time = time_point<Clock, msecs>;
 
-class GpsSensor : public Subject
+class Sensor : public Subject
+{
+public:
+  Sensor() {
+    _now = time_point_cast<msecs>(Clock::now());
+  };
+  virtual void read() = 0;
+  
+protected:
+  Time _now;
+};
+
+class GpsSensor : public Sensor
 {
   Position _p;
   Velocity _v;
-  Time _now;
 
  public:
-  GpsSensor(Position const& p, Velocity const& v) {
-    _p = p; // initial position
-    _v = v; // initial velocity
-    _now = time_point_cast<msecs>(Clock::now());
-  };
-  void read() {
+  GpsSensor(Position const& p, Velocity const& v) : _p(p), _v(v) { }
+  void read() override {
     auto now = time_point_cast<msecs>(Clock::now());
     positionProcessing(_v, now); // we simulate position using fixed initial velocity
     _now = now;
-  };
+  }
 
-  Position getPosition() { return _p; };
-  Velocity getVelocity() { return _v; };
+  Position getPosition() { return _p; }
+  Velocity getVelocity() { return _v; }
 
-  void notify() {
+  void notify() override {
     for (auto e : _observers)
       e->update(this);
   }
@@ -48,19 +55,15 @@ class GpsSensor : public Subject
 
 };
 
-class RfSensor : public Subject
+class RfSensor : public Sensor
 {
   Distance _d;
   Velocity _v;
-  Time _now;
 
  public:
-  RfSensor(Distance const& d, Velocity const& v) {
-    _d = d; // initial distance
-    _v = v; // initial velocity
-    _now = time_point_cast<msecs>(Clock::now());
-  };
-  void read() {
+  RfSensor(Distance const& d, Velocity const& v) : _d(d), _v(v) { }
+
+  void read() override {
     auto now = time_point_cast<msecs>(Clock::now());
     distanceProcessing(_v, now);
     _now = now;
@@ -69,7 +72,7 @@ class RfSensor : public Subject
   Distance getDistance() { return _d; };
   Velocity getVelocity() { return _v; };
 
-  void notify() {
+  void notify() override {
     for (auto e : _observers)
       e->update(this);
   }

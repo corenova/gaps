@@ -2,6 +2,7 @@
 #include "pnt_data.h"
 #include "observer.h"
 #include "sensors.h"
+#include <iostream>
 
 class OwnShip: public Observer, public Subject
 {
@@ -14,22 +15,10 @@ public:
 
   Position getPosition() { return _track._pos; }
   Track getTracking() { return _track; }
-  
-  void update(Subject *s) {
-    static int cnt = 0;
-    GpsSensor *gps = dynamic_cast<GpsSensor *>(s);
-    if (gps) {
-      std::cout << "OwnShip got update" << std::endl;
-      setLocation(gps->getPosition());
-      setVelocity(gps->getVelocity());
-      notify();
-    }
-    int cycle_cnt = static_cast<int> (((1.0 / _frequency) / (sleep_msec / 1000))); 
-    if(cycle_cnt != 0 && 0 == ++cnt%cycle_cnt)
-      print_track();
-  }
 
-  void notify() {
+  virtual void update(Subject *s) override;
+  
+  void notify() override {
     for (auto e : _observers)
       e->update(this);
   }
@@ -42,21 +31,7 @@ public:
 	      << " z=" << _track._pos._z << std::endl << std::endl;
   }
 protected:
-  void setLocation(Position const& p)
-  {
-    _track._pos._x = p._x;
-    _track._pos._y = p._y;
-    _track._pos._z = p._z;
-  };
-	
-  void setVelocity(Velocity const& v)
-  {
-    _track._v = v;
-    // _track._v._dx = v._dx;
-    // _track._v._dy = v._dy;
-    // _track._v._dz = v._dz;
-  };
+  void setLocation(Position const& p) { _track._pos = p; }
+  void setVelocity(Velocity const& v) { _track._v = v; }
   
 };
-
-

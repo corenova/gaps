@@ -1,6 +1,6 @@
 yang-openapi:info:
-  title: Apposite Netropy
-  version: '4.0'
+  title: DARPA GAPS
+  version: '1.0'
   description: |
     Apposite Netropy WAN Emulator
   contact:

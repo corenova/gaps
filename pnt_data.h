@@ -1,7 +1,7 @@
 #pragma once
 enum sensitivity { red, blue, green, yellow, orange };
-int max_fqc = 100;
-double sleep_msec = 1000 / max_fqc; 
+static int max_fqc = 100;
+static double sleep_msec = 1000 / max_fqc; 
 
 struct Distance {
   Distance() :_dx(.0), _dy(.0), _dz(.0) {};
@@ -35,7 +35,6 @@ struct Velocity {
 struct Track {
   Position _pos;
   Velocity _v;
-  time_t  _tm; 
 };
 
 

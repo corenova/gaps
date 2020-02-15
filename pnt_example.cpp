@@ -1,12 +1,11 @@
 // pnt_example.cpp : Defines the entry point for the console application.
 //
 
-// #include "stdafx.h"
 #include <iostream>
 #ifdef _WIN32
-#include <Windows.h>
+# include <Windows.h>
 #else
-#include <unistd.h>
+# include <unistd.h>
 #endif
 #include "pnt_data.h"
 #include "sensors.h"
@@ -22,7 +21,7 @@ int main()
   Velocity vtgt(35, 625, 18);
   
   GpsSensor* gps = new GpsSensor(p, v);
-  RfSensor* rf = new RfSensor(d, vtgt);
+  RfSensor* rfs = new RfSensor(d, vtgt);
   
   OwnShip* uav = new OwnShip(100); // runs at 100 Hz frequency
   //Target* tgt = new Target (d, v, time_point_cast<milliseconds>(system_clock::now()), 10);
@@ -37,7 +36,7 @@ int main()
     {
       // here we simulate sensor data streams
       gps->read();
-      rf->read();
+      rfs->read();
       
 #ifdef _WIN32	  
       Sleep(sleep_msec); // 100 Hz
