@@ -10,7 +10,7 @@
 #include "pnt_data.h"
 #include "sensors.h"
 #include "ownship.h"
-//#include "target.h"
+#include "target.h"
 
 int main()
 {
@@ -23,14 +23,14 @@ int main()
   GpsSensor* gps = new GpsSensor(p, v);
   RfSensor* rfs = new RfSensor(d, vtgt);
   
-  OwnShip* uav = new OwnShip(100); // runs at 100 Hz frequency
-  //Target* tgt = new Target (d, v, time_point_cast<milliseconds>(system_clock::now()), 10);
+  OwnShip* uav = new OwnShip(100); // updates at 100 Hz frequency
+  Target* tgt = new Target (10); // updates at 10 Hz frequency
 
   // setup the dataflow relationships
   gps->attach(uav);
-  //gps->attach(tgt);
-  //uav->attach(tgt)
-  //rf->attach(tgt);
+  gps->attach(tgt);
+  uav->attach(tgt);
+  rfs->attach(tgt);
 
   while (true)
     {
@@ -44,8 +44,6 @@ int main()
       usleep(sleep_msec * 1000);
 #endif
     }
-
-
   return 0;
 }
 

@@ -23,26 +23,25 @@ protected:
 class GpsSensor : public Sensor
 {
   Position _p;
-  Velocity _v;
+  Velocity _v; // only used for simulation
 
  public:
   GpsSensor(Position const& p, Velocity const& v) : _p(p), _v(v) { }
+  Position getPosition() { return _p; }
+  Time getTimePoint() { return _now; }
+
   void read() override {
     auto now = time_point_cast<msecs>(Clock::now());
-    positionProcessing(_v, now); // we simulate position using fixed initial velocity
+    simulate(_v, now); // we simulate position using fixed initial velocity
     _now = now;
   }
-
-  Position getPosition() { return _p; }
-  Velocity getVelocity() { return _v; }
-
   void notify() override {
     for (auto e : _observers)
       e->update(this);
   }
 
  private:
-  void positionProcessing(Velocity const& v, Time const& now)
+  void simulate(Velocity const& v, Time const& now)
   {
     auto elapsed = duration_cast<msecs>(now - _now);
     double delta = elapsed.count() / 1000.0;
@@ -58,27 +57,24 @@ class GpsSensor : public Sensor
 class RfSensor : public Sensor
 {
   Distance _d;
-  Velocity _v;
+  Velocity _v; // only used for simulation
 
  public:
   RfSensor(Distance const& d, Velocity const& v) : _d(d), _v(v) { }
+  Distance getDistance() { return _d; };
 
   void read() override {
     auto now = time_point_cast<msecs>(Clock::now());
-    distanceProcessing(_v, now);
+    simulate(_v, now);
     _now = now;
-  };
-
-  Distance getDistance() { return _d; };
-  Velocity getVelocity() { return _v; };
-
+  }
   void notify() override {
     for (auto e : _observers)
       e->update(this);
   }
 
  private:
-  void distanceProcessing(Velocity const& v, Time const& now)
+  void simulate(Velocity const& v, Time const& now)
   {
     auto elapsed = duration_cast<msecs>(now - _now);
     double delta = elapsed.count() / 1000.0;

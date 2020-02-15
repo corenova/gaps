@@ -1,16 +1,18 @@
 #pragma once
 #include "pnt_data.h"
 #include "observer.h"
-#include "sensors.h"
 #include <iostream>
 
 class OwnShip: public Observer, public Subject
 {
   Track _track;
   int _frequency;
+  int _cycle;
 
 public:
-  OwnShip(int rate = 1) : _frequency(rate) {};
+  OwnShip(int rate = 1) : _frequency(rate) {
+    _cycle = static_cast<int> (((1.0 / _frequency) / (sleep_msec / 1000)));
+  };
   ~OwnShip() {};
 
   Position getPosition() { return _track._pos; }
@@ -31,7 +33,7 @@ public:
 	      << " z=" << _track._pos._z << std::endl << std::endl;
   }
 protected:
-  void setLocation(Position const& p) { _track._pos = p; }
+  void setPosition(Position const& p) { _track._pos = p; }
   void setVelocity(Velocity const& v) { _track._v = v; }
   
 };

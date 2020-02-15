@@ -1,6 +1,6 @@
 CPPFLAGS=-std=c++11
 
-pnt: pnt_example.o ownship.o
+pnt: pnt_example.o ownship.o target.o
 	$(CXX) -o $@ $^
 clean:
-	rm -f pnt pnt_example.o
+	rm -f pnt *.o
