@@ -1,0 +1,51 @@
+yang-openapi:info:
+  title: Apposite Netropy
+  version: '4.0'
+  description: |
+    Apposite Netropy WAN Emulator
+  contact:
+    name:  Apposite Technologies
+    url:   https://apposite-tech.com
+    email: support@apposite-tech.com
+  license:
+    name: Proprietary
+
+yang-web-store:server:
+  port: 80
+  routers: [ restjson ]
+  # TODO: fix issue with leafref during config run
+  modules:
+    - apposite-netropy-system
+    - apposite-wan-emulator
+
+apposite-netropy-controller:secure:
+  port: 443
+  cert: /etc/server.pem
+  key: /etc/server.pem
+    
+apposite-netropy-controller:server:
+  hostname: 127.0.0.1
+  port: 8000
+  pathname: web-control
+  query:
+    interval: 1
+
+apposite-netropy-controller:sync:
+  uri: ws://0.0.0.0:5000
+
+apposite-netropy-application:sync:
+  protocol: ws
+  # on the browser, this hostname will be window.location.hostname
+  hostname: 127.0.0.1
+  port: 5000
+  query:
+    retry: true
+  
+apposite-netropy-system:admin:
+  users:
+    user:
+      - name: admin
+
+apposite-netropy-system:device:
+  model: Netropy
+

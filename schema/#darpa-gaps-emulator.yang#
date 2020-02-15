@@ -1,0 +1,26 @@
+module darpa-gaps-emulator {
+  namespace "urn:ietf:params:xml:ns:yang:darpa-gaps-emulator";
+  prefix gaps;
+  yang-version "1.1";
+  
+  organization
+    "Corenova Technologies (http://corenova.com)";
+  contact
+    "Peter K. Lee <peter@corenova.com>";
+  revision 2020-02-13 {
+    description "Initial revision.";
+  }
+
+  import kinetic-object-stream {
+    prefix kos;
+  }
+
+  kos:interface PositionSensor {
+
+
+  }
+  kos:interface 
+  
+  
+  
+}
